@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <meta name="theme-color" content="#0a0d18" />
+  <title>DARC Waves</title>
+
+  <style>
+    :root {
+      --bg-1: #050816;
+      --bg-2: #0a1030;
+      --bg-3: #111827;
+      --card: rgba(10, 14, 28, 0.72);
+      --card-strong: rgba(11, 16, 34, 0.9);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #f5f7ff;
+      --muted: #a9b2cf;
+      --primary: #7c5cff;
+      --primary-2: #9a7cff;
+      --secondary: #2596ff;
+      --secondary-2: #4bb3ff;
+      --success: #19c37d;
+      --warning: #d69e10;
+      --danger: #ef4444;
+      --shadow-xl: 0 18px 50px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.24);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --blur: blur(18px);
+      --content-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124, 92, 255, 0.18), transparent 26%),
+        radial-gradient(circle at top right, rgba(37, 150, 255, 0.16), transparent 26%),
+        linear-gradient(180deg, #050816 0%, #09112a 52%, #0b1020 100%);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: -3;
+      width: 65vw;
+      height: 65vw;
+      filter: blur(60px);
+      opacity: 0.22;
+      border-radius: 999px;
+      animation: pulseBlob 12s ease-in-out infinite;
+    }
+
+    body::before {
+      top: -20vw;
+      left: -12vw;
+      background: radial-gradient(circle, rgba(124, 92, 255, 0.6), transparent 60%);
+    }
+
+    body::after {
+      right: -18vw;
+      bottom: -20vw;
+      background: radial-gradient(circle, rgba(37, 150, 255, 0.55), transparent 60%);
+      animation-delay: -6s;
+    }
+
+    @keyframes pulseBlob {
+      0%, 100% {
+        transform: scale(1) translateY(0px);
+      }
+      50% {
+        transform: scale(1.08) translateY(12px);
+      }
+    }
+
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(124, 92, 255, 0.08), rgba(37, 150, 255, 0.08), rgba(0, 0, 0, 0.06));
+    }
+
+    .wave {
+      position: absolute;
+      left: -20%;
+      width: 140%;
+      height: 140%;
+      border-radius: 42%;
+      opacity: 0.18;
+      filter: blur(24px);
+      mix-blend-mode: screen;
+      transform-origin: center;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(124, 92, 255, 0.48), transparent 42%),
+        radial-gradient(circle at 65% 45%, rgba(37, 150, 255, 0.4), transparent 40%),
+        radial-gradient(circle at 55% 65%, rgba(0, 0, 0, 0.22), transparent 28%);
+    }
+
+    .wave.wave-1 {
+      top: -48%;
+      animation: spinWave 22s linear infinite;
+    }
+
+    .wave.wave-2 {
+      top: -54%;
+      animation: spinWave 30s linear reverse infinite;
+      opacity: 0.14;
+    }
+
+    .wave.wave-3 {
+      top: -58%;
+      animation: spinWave 40s linear infinite;
+      opacity: 0.12;
+    }
+
+    @keyframes spinWave {
+      0% {
+        transform: rotate(0deg) translateY(0px);
+      }
+      50% {
+        transform: rotate(180deg) translateY(20px);
+      }
+      100% {
+        transform: rotate(360deg) translateY(0px);
+      }
+    }
+
+    .app-shell {
+      width: min(var(--content-width), calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+      position: relative;
+    }
+
+    .top-space {
+      height: 10px;
+    }
+
+    .brand-wrap {
+      padding: 18px 0 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .brand {
+      margin: 0;
+      font-size: clamp(2.5rem, 7vw, 4.6rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.03em;
+      text-align: center;
+      user-select: none;
+      background: linear-gradient(
+        90deg,
+        #ffffff 0%,
+        #c7b8ff 20%,
+        #7c5cff 42%,
+        #55a9ff 65%,
+        #ffffff 100%
+      );
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 22px rgba(124, 92, 255, 0.16);
+      animation:
+        brandShine 9s linear infinite,
+        brandWave 4.8s ease-in-out infinite;
+    }
+
+    @keyframes brandShine {
+      to {
+        background-position: 220% center;
+      }
+    }
+
+    @keyframes brandWave {
+      0%, 100% {
+        transform: translateY(0px) skewX(0deg);
+      }
+      25% {
+        transform: translateY(-4px) skewX(-1deg);
+      }
+      50% {
+        transform: translateY(0px) skewX(0deg);
+      }
+      75% {
+        transform: translateY(4px) skewX(1deg);
+      }
+    }
+
+    .glass-panel {
+      background: var(--card);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .hero-panel {
+      padding: 22px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(124, 92, 255, 0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(37, 150, 255, 0.1), transparent 28%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      margin: 0 0 8px;
+      font-size: 1.18rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-subtitle {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.98rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .input-theme {
+      width: 100%;
+      min-height: 56px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      padding: 15px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .input-theme::placeholder {
+      color: #a6b0cd;
+      font-weight: 500;
+    }
+
+    .input-theme:focus {
+      border-color: rgba(124, 92, 255, 0.5);
+      box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn {
+      min-height: 56px;
+      border: none;
+      border-radius: 18px;
+      padding: 14px 18px;
+      color: #ffffff;
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        opacity 0.18s ease,
+        filter 0.18s ease;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+    }
+
+    .btn:active {
+      transform: translateY(0px) scale(0.99);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      filter: grayscale(0.08);
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.12) 40%,
+        transparent 80%
+      );
+      transform: translateX(-130%);
+      transition: transform 0.5s ease;
+      pointer-events: none;
+    }
+
+    .btn:hover::after {
+      transform: translateX(130%);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #2b68c7, var(--secondary));
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #0e9b63, var(--success));
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #b8860b, var(--warning));
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .toolbar-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      min-height: 28px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #d7def7;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #7c5cff;
+      box-shadow: 0 0 14px rgba(124, 92, 255, 0.8);
+      animation: blinkDot 1s ease-in-out infinite;
+    }
+
+    @keyframes blinkDot {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.35;
+      }
+    }
+
+    .error-banner {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+      color: #ffd2d2;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+.content-panel {
+      padding: 22px;
+      min-height: 240px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(124, 92, 255, 0.08), transparent 28%);
+    }
+
+    .content-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      margin: 0 0 14px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+
+    .legend-text {
+      white-space: pre-wrap;
+      line-height: 1.72;
+      color: #f4f7ff;
+      font-size: 1rem;
+      min-height: 120px;
+    }
+
+    .hashtags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-start;
+      align-content: flex-start;
+      min-height: 120px;
+    }
+
+    .tag {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(37, 150, 255, 0.12);
+      border: 1px solid rgba(37, 150, 255, 0.22);
+      color: #a8d8ff;
+      font-weight: 800;
+      font-size: 0.94rem;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .legend-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .slides-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .slide-card {
+      background:
+        linear-gradient(145deg, rgba(10, 14, 28, 0.88), rgba(13, 21, 48, 0.84));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      min-height: 360px;
+      position: relative;
+      padding: 18px;
+    }
+
+    .slide-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top left, rgba(124, 92, 255, 0.1), transparent 22%),
+        radial-gradient(circle at bottom right, rgba(37, 150, 255, 0.08), transparent 22%);
+    }
+
+    .slide-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .slide-number {
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .slide-status {
+      font-size: 0.82rem;
+      color: #cad2ec;
+      font-weight: 800;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .slide-status.loading {
+      color: #d6ddf9;
+    }
+
+    .slide-status.done {
+      color: #b8ffd8;
+      background: rgba(25, 195, 125, 0.12);
+      border-color: rgba(25, 195, 125, 0.28);
+    }
+
+    .slide-status.error {
+      color: #ffd5d5;
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.26);
+    }
+
+    .slide-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.22rem, 3vw, 1.72rem);
+      line-height: 1.16;
+      font-weight: 900;
+      text-wrap: balance;
+    }
+
+    .slide-text {
+      margin: 0 0 16px;
+      color: #e6ebfb;
+      line-height: 1.65;
+      font-size: 1rem;
+      min-height: 84px;
+      white-space: pre-wrap;
+    }
+
+    .image-shell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(124, 92, 255, 0.14), rgba(37, 150, 255, 0.14), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-shell.loading::before {
+      content: "";
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 4px solid rgba(255, 255, 255, 0.16);
+      border-top-color: #8f73ff;
+      animation: spinLoader 1s linear infinite;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .image-shell.loading::after {
+      content: "Gerando imagem...";
+      position: absolute;
+      bottom: 18px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #dce3fa;
+      z-index: 1;
+      text-align: center;
+      padding: 0 12px;
+    }
+
+    @keyframes spinLoader {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .slide-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .slide-image.visible {
+      display: block;
+    }
+
+    .image-error {
+      display: none;
+      margin-top: 12px;
+      color: #ffc4c4;
+      font-size: 0.94rem;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .slide-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .mini-btn {
+      min-height: 46px;
+      border-radius: 14px;
+      border: none;
+      padding: 10px 14px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.94rem;
+      transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .mini-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+    }
+
+    .mini-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .mini-purple {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    }
+
+    .mini-blue {
+      background: linear-gradient(135deg, #2b68c7, var(--secondary));
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+      padding: 34px 22px;
+      min-height: 220px;
+      color: var(--muted);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .empty-state strong {
+      color: var(--text);
+      font-size: 1.02rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 980px) {
+      .content-grid,
+      .slides-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .app-shell {
+        width: min(var(--content-width), calc(100% - 20px));
+      }
+
+      .hero-panel,
+      .content-panel {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brand-wrap {
+        padding-top: 12px;
+      }
+
+      .brand {
+        font-size: clamp(2.1rem, 12vw, 3.2rem);
+      }
+
+      .toolbar-row,
+      .legend-actions,
+      .slide-buttons {
+        flex-direction: column;
+      }
+
+      .btn,
+      .mini-btn {
+        width: 100%;
+      }
+
+      .slide-card {
+        padding: 16px;
+      }
+
+      .slide-text {
+        min-height: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-bg" aria-hidden="true">
+    <div class="wave wave-1"></div>
+    <div class="wave wave-2"></div>
+    <div class="wave wave-3"></div>
+  </div>
+
+  <main class="app-shell">
+    <div class="top-space"></div>
+
+    <section class="brand-wrap" aria-label="Marca do aplicativo">
+      <h1 class="brand">DARC Waves</h1>
+    </section>
+<section class="glass-panel hero-panel" aria-label="Geração de conteúdo">
+      <div class="hero-content">
+        <h2 class="hero-title">Gerador de conteúdo inteligente</h2>
+        <p class="hero-subtitle">
+          Crie carrosséis completos com legenda, hashtags e imagens profissionais em segundos.
+        </p>
+
+        <div class="form-grid">
+          <input
+            id="tema"
+            class="input-theme"
+            type="text"
+            placeholder="Ex: Pizza de calabresa para delivery..."
+            autocomplete="off"
+          />
+
+          <button id="btnGerar" class="btn btn-primary">
+            Gerar
+          </button>
+
+          <button id="btnOutroTexto" class="btn btn-secondary">
+            Outro texto
+          </button>
+        </div>
+
+        <div class="toolbar-row">
+          <button id="btnImagens" class="btn btn-success">
+            Outras imagens
+          </button>
+
+          <button id="btnBaixarTudo" class="btn btn-warning">
+            Baixar tudo
+          </button>
+        </div>
+
+        <div class="status-row">
+          <div id="status" class="status-pill" style="display:none;">
+            <span class="dot"></span>
+            <span id="statusTexto">Processando...</span>
+          </div>
+        </div>
+
+        <div id="erro" class="error-banner"></div>
+      </div>
+    </section>
+<section class="content-grid">
+      <div class="glass-panel content-panel">
+        <h3 class="panel-title">Legenda</h3>
+
+        <div id="texto" class="legend-text">
+          Gere um conteúdo para começar...
+        </div>
+
+        <div class="legend-actions">
+          <button id="btnCopiar" class="btn btn-ghost">
+            Copiar legenda
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-panel content-panel">
+        <h3 class="panel-title">Hashtags</h3>
+
+        <div id="hashtags" class="hashtags-wrap">
+          <span class="tag">#marketing</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div id="slides" class="slides-grid">
+        <div class="empty-state">
+          <strong>Nenhum conteúdo ainda</strong>
+          <span>Digite um tema e clique em gerar.</span>
+        </div>
+      </div>
+    </section>
+</main>
+
+  <script>
+    const estado = {
+      temaAtual: "",
+      slidesData: [],
+      gerandoConteudo: false,
+      gerandoImagens: false,
+      abortControllerConteudo: null,
+      mapaGeracaoImagem: new Map()
+    };
+
+    const el = {
+      tema: document.getElementById("tema"),
+      btnGerar: document.getElementById("btnGerar"),
+      btnOutroTexto: document.getElementById("btnOutroTexto"),
+      btnImagens: document.getElementById("btnImagens"),
+      btnBaixarTudo: document.getElementById("btnBaixarTudo"),
+      btnCopiar: document.getElementById("btnCopiar"),
+      texto: document.getElementById("texto"),
+      hashtags: document.getElementById("hashtags"),
+      slides: document.getElementById("slides"),
+      erro: document.getElementById("erro"),
+      status: document.getElementById("status"),
+      statusTexto: document.getElementById("statusTexto")
+    };
+
+    function mostrarErro(mensagem) {
+      el.erro.style.display = "block";
+      el.erro.textContent = mensagem || "Ocorreu um erro inesperado.";
+    }
+
+    function esconderErro() {
+      el.erro.style.display = "none";
+      el.erro.textContent = "";
+    }
+
+    function setStatus(texto, visivel = true) {
+      if (!visivel) {
+        el.status.style.display = "none";
+        el.statusTexto.textContent = "";
+        return;
+      }
+
+      el.status.style.display = "inline-flex";
+      el.statusTexto.textContent = texto || "Processando...";
+    }
+
+    function setBotoesDesabilitados(valor) {
+      el.btnGerar.disabled = valor;
+      el.btnOutroTexto.disabled = valor;
+      el.btnImagens.disabled = valor;
+      el.btnBaixarTudo.disabled = valor;
+      el.btnCopiar.disabled = valor;
+      el.tema.disabled = valor;
+    }
+
+    function escaparHtml(valor) {
+      return String(valor ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function validarArray(valor) {
+      return Array.isArray(valor) ? valor : [];
+    }
+
+    function limparHashtagsBrutas(lista) {
+      const entrada = validarArray(lista);
+
+      return entrada
+        .map((item) => String(item || "").trim())
+        .filter(Boolean)
+        .map((item) => (item.startsWith("#") ? item : `#${item}`))
+        .slice(0, 10);
+    }
+
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+function atualizarTextoLegenda(texto) {
+      el.texto.textContent = texto || "Nenhuma legenda gerada.";
+    }
+
+    function atualizarHashtags(lista) {
+      const hashtags = limparHashtagsBrutas(lista);
+
+      if (!hashtags.length) {
+        el.hashtags.innerHTML = `<span class="tag">#semhashtags</span>`;
+        return;
+      }
+
+      el.hashtags.innerHTML = hashtags
+        .map((tag) => `<span class="tag">${escaparHtml(tag)}</span>`)
+        .join("");
+    }
+
+    function criarSlideSeguro(slide, index) {
+      return {
+        id: Number(slide?.id || index + 1),
+        titulo: String(slide?.titulo || `Slide ${index + 1}`),
+        texto: String(slide?.texto || ""),
+        promptImagem: String(slide?.promptImagem || ""),
+        imagem: String(slide?.imagem || ""),
+        status: "idle",
+        erro: ""
+      };
+    }
+
+    function atualizarEstadoSlides(slides) {
+      estado.slidesData = validarArray(slides).map((slide, index) =>
+        criarSlideSeguro(slide, index)
+      );
+    }
+
+    function renderEstadoVazio() {
+      el.slides.innerHTML = `
+        <div class="empty-state">
+          <strong>Nenhum conteúdo ainda</strong>
+          <span>Digite um tema e clique em gerar.</span>
+        </div>
+      `;
+    }
+
+    function renderSlides() {
+      if (!estado.slidesData.length) {
+        renderEstadoVazio();
+        return;
+      }
+
+      el.slides.innerHTML = estado.slidesData
+        .map((slide, i) => {
+          const statusClasse =
+            slide.status === "done"
+              ? "done"
+              : slide.status === "error"
+              ? "error"
+              : "loading";
+
+          const statusTexto =
+            slide.status === "done"
+              ? "Imagem pronta"
+              : slide.status === "error"
+              ? "Falha na imagem"
+              : "Preparando";
+
+          return `
+            <article class="slide-card" id="slide-card-${i}">
+              <div class="slide-topline">
+                <span class="slide-number">Slide ${i + 1}</span>
+                <span class="slide-status ${statusClasse}" id="slide-status-${i}">
+                  ${escaparHtml(statusTexto)}
+                </span>
+              </div>
+
+              <h3 class="slide-title">${escaparHtml(slide.titulo)}</h3>
+              <p class="slide-text">${escaparHtml(slide.texto)}</p>
+
+              <div class="image-shell ${slide.imagem ? "" : "loading"}" id="image-shell-${i}">
+                <img
+                  id="img-${i}"
+                  class="slide-image ${slide.imagem ? "visible" : ""}"
+                  alt="${escaparHtml(slide.titulo)}"
+                  ${slide.imagem ? `src="${escaparHtml(slide.imagem)}"` : ""}
+                />
+              </div>
+
+              <div class="image-error" id="image-error-${i}" style="${slide.erro ? "display:block;" : "display:none;"}">
+                ${escaparHtml(slide.erro || "")}
+              </div>
+
+              <div class="slide-buttons">
+                <button
+                  class="mini-btn mini-purple"
+                  onclick="baixar(${i})"
+                  id="btn-baixar-${i}"
+                  ${slide.imagem ? "" : "disabled"}
+                >
+                  Baixar imagem
+                </button>
+
+                <button
+                  class="mini-btn mini-blue"
+                  onclick="regenerarImagemUnica(${i})"
+                  id="btn-regerar-${i}"
+                >
+                  Nova imagem
+                </button>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    }
+function atualizarStatusSlide(index, status, erro = "") {
+      const slide = estado.slidesData[index];
+      if (!slide) return;
+
+      slide.status = status;
+      slide.erro = erro || "";
+
+      const statusEl = document.getElementById(`slide-status-${index}`);
+      const erroEl = document.getElementById(`image-error-${index}`);
+      const shellEl = document.getElementById(`image-shell-${index}`);
+      const btnBaixar = document.getElementById(`btn-baixar-${index}`);
+
+      if (statusEl) {
+        statusEl.classList.remove("loading", "done", "error");
+
+        if (status === "done") {
+          statusEl.classList.add("done");
+          statusEl.textContent = "Imagem pronta";
+        } else if (status === "error") {
+          statusEl.classList.add("error");
+          statusEl.textContent = "Falha na imagem";
+        } else {
+          statusEl.classList.add("loading");
+          statusEl.textContent = "Gerando imagem";
+        }
+      }
+
+      if (erroEl) {
+        if (erro) {
+          erroEl.style.display = "block";
+          erroEl.textContent = erro;
+        } else {
+          erroEl.style.display = "none";
+          erroEl.textContent = "";
+        }
+      }
+
+      if (shellEl) {
+        if (status === "done") {
+          shellEl.classList.remove("loading");
+        } else if (status === "error") {
+          shellEl.classList.remove("loading");
+        } else {
+          shellEl.classList.add("loading");
+        }
+      }
+
+      if (btnBaixar) {
+        btnBaixar.disabled = !slide.imagem;
+      }
+    }
+
+    function atualizarImagemSlide(index, imagem) {
+      const slide = estado.slidesData[index];
+      if (!slide) return;
+
+      slide.imagem = imagem || "";
+
+      const imgEl = document.getElementById(`img-${index}`);
+      const shellEl = document.getElementById(`image-shell-${index}`);
+      const btnBaixar = document.getElementById(`btn-baixar-${index}`);
+
+      if (!imgEl || !shellEl) return;
+
+      if (!imagem) {
+        imgEl.removeAttribute("src");
+        imgEl.classList.remove("visible");
+        shellEl.classList.add("loading");
+        if (btnBaixar) btnBaixar.disabled = true;
+        return;
+      }
+
+      imgEl.onload = () => {
+        imgEl.classList.add("visible");
+        shellEl.classList.remove("loading");
+        if (btnBaixar) btnBaixar.disabled = false;
+      };
+
+      imgEl.onerror = () => {
+        slide.imagem = "";
+        imgEl.classList.remove("visible");
+        shellEl.classList.remove("loading");
+        if (btnBaixar) btnBaixar.disabled = true;
+        atualizarStatusSlide(index, "error", "A imagem foi recebida, mas não carregou no navegador.");
+      };
+
+      imgEl.src = imagem;
+    }
+
+    function cancelarGeracaoConteudoAnterior() {
+      if (estado.abortControllerConteudo) {
+        try {
+          estado.abortControllerConteudo.abort();
+        } catch (_) {}
+      }
+
+      estado.abortControllerConteudo = new AbortController();
+      return estado.abortControllerConteudo.signal;
+    }
+
+    function podeGerarComTema() {
+      const tema = String(el.tema.value || "").trim();
+
+      if (!tema) {
+        mostrarErro("Digite um tema antes de gerar.");
+        el.tema.focus();
+        return false;
+      }
+
+      if (tema.length < 3) {
+        mostrarErro("Digite um tema mais específico para gerar um conteúdo melhor.");
+        el.tema.focus();
+        return false;
+      }
+
+      return true;
+    }
+async function gerar() {
+      esconderErro();
+
+      if (!podeGerarComTema()) {
+        return;
+      }
+
+      if (estado.gerandoConteudo) {
+        mostrarErro("Já existe uma geração em andamento. Aguarde alguns segundos.");
+        return;
+      }
+
+      const tema = String(el.tema.value || "").trim();
+      estado.temaAtual = tema;
+      estado.gerandoConteudo = true;
+      estado.gerandoImagens = false;
+
+      const signal = cancelarGeracaoConteudoAnterior();
+
+      setBotoesDesabilitados(true);
+      setStatus("Gerando conteúdo...");
+      atualizarTextoLegenda("Gerando conteúdo...");
+      atualizarHashtags([]);
+      renderEstadoVazio();
+
+      try {
+        const resposta = await fetch(
+          `/gerar-conteudo?tema=${encodeURIComponent(tema)}`,
+          {
+            method: "GET",
+            signal,
+            headers: {
+              "Accept": "application/json"
+            }
+          }
+        );
+
+        if (!resposta.ok) {
+          const textoErro = await resposta.text().catch(() => "");
+          throw new Error(textoErro || "Falha ao gerar conteúdo.");
+        }
+
+        const data = await resposta.json();
+
+        if (!data || typeof data !== "object") {
+          throw new Error("Resposta inválida do servidor.");
+        }
+
+        atualizarTextoLegenda(String(data.texto || ""));
+        atualizarHashtags(data.hashtags || []);
+        atualizarEstadoSlides(data.slides || []);
+        renderSlides();
+
+        if (!estado.slidesData.length) {
+          throw new Error("Nenhum slide foi retornado pela IA.");
+        }
+
+        setStatus("Gerando imagens...");
+        estado.gerandoImagens = true;
+
+        for (let i = 0; i < estado.slidesData.length; i++) {
+          await gerarImagemSlide(i);
+          await delay(180);
+        }
+
+        setStatus("Conteúdo concluído com sucesso.");
+        await delay(1200);
+        setStatus("", false);
+      } catch (erro) {
+        if (erro?.name === "AbortError") {
+          mostrarErro("A geração anterior foi cancelada para iniciar uma nova.");
+        } else {
+          console.error("Erro ao gerar conteúdo:", erro);
+          mostrarErro(erro?.message || "Erro ao gerar conteúdo.");
+          atualizarTextoLegenda("Não foi possível gerar o conteúdo.");
+          atualizarHashtags([]);
+          renderEstadoVazio();
+        }
+      } finally {
+        estado.gerandoConteudo = false;
+        estado.gerandoImagens = false;
+        setBotoesDesabilitados(false);
+      }
+    }
+async function gerarImagemSlide(index) {
+      const slide = estado.slidesData[index];
+
+      if (!slide) {
+        return;
+      }
+
+      if (!slide.promptImagem || String(slide.promptImagem).trim().length < 3) {
+        atualizarStatusSlide(index, "error", "Prompt da imagem inválido para este slide.");
+        return;
+      }
+
+      const controllerExistente = estado.mapaGeracaoImagem.get(index);
+      if (controllerExistente) {
+        try {
+          controllerExistente.abort();
+        } catch (_) {}
+      }
+
+      const controller = new AbortController();
+      estado.mapaGeracaoImagem.set(index, controller);
+
+      atualizarStatusSlide(index, "loading", "");
+      atualizarImagemSlide(index, "");
+
+      try {
+        const resposta = await fetch(
+          `/gerar-imagem?prompt=${encodeURIComponent(slide.promptImagem)}&titulo=${encodeURIComponent(slide.titulo)}&texto=${encodeURIComponent(slide.texto)}&tema=${encodeURIComponent(estado.temaAtual)}`,
+          {
+            method: "GET",
+            signal: controller.signal,
+            headers: {
+              "Accept": "application/json"
+            }
+          }
+        );
+
+        if (!resposta.ok) {
+          let textoErro = "";
+          try {
+            textoErro = await resposta.text();
+          } catch (_) {}
+          throw new Error(textoErro || "Falha ao gerar imagem.");
+        }
+
+        const data = await resposta.json();
+
+        if (!data || typeof data !== "object") {
+          throw new Error("Resposta inválida ao gerar imagem.");
+        }
+
+        if (!data.ok || !data.imagem) {
+          throw new Error(data.erro || "Imagem não foi retornada pelo servidor.");
+        }
+
+        atualizarImagemSlide(index, data.imagem);
+        atualizarStatusSlide(index, "done", "");
+      } catch (erro) {
+        if (erro?.name === "AbortError") {
+          atualizarStatusSlide(index, "error", "Geração da imagem cancelada.");
+        } else {
+          console.error(`Erro ao gerar imagem do slide ${index + 1}:`, erro);
+          atualizarStatusSlide(index, "error", erro?.message || "Erro ao gerar imagem.");
+        }
+      } finally {
+        estado.mapaGeracaoImagem.delete(index);
+      }
+    }
+
+    async function regenerarImagemUnica(index) {
+      esconderErro();
+
+      if (!estado.slidesData.length) {
+        mostrarErro("Nenhum slide disponível para regenerar imagem.");
+        return;
+      }
+
+      await gerarImagemSlide(index);
+    }
+async function novasImagens() {
+      esconderErro();
+
+      if (!estado.slidesData.length) {
+        mostrarErro("Gere conteúdo primeiro antes de pedir novas imagens.");
+        return;
+      }
+
+      if (estado.gerandoImagens) {
+        mostrarErro("As imagens já estão sendo geradas. Aguarde a conclusão.");
+        return;
+      }
+
+      estado.gerandoImagens = true;
+      setBotoesDesabilitados(true);
+      setStatus("Gerando novas imagens...");
+
+      try {
+        for (let i = 0; i < estado.slidesData.length; i++) {
+          await gerarImagemSlide(i);
+          await delay(180);
+        }
+
+        setStatus("Novas imagens concluídas.");
+        await delay(1100);
+        setStatus("", false);
+      } catch (erro) {
+        console.error("Erro ao gerar novas imagens:", erro);
+        mostrarErro(erro?.message || "Erro ao gerar novas imagens.");
+      } finally {
+        estado.gerandoImagens = false;
+        setBotoesDesabilitados(false);
+      }
+    }
+
+    async function novoTexto() {
+      esconderErro();
+
+      if (!podeGerarComTema()) {
+        return;
+      }
+
+      if (estado.gerandoConteudo) {
+        mostrarErro("Já existe uma geração em andamento. Aguarde alguns segundos.");
+        return;
+      }
+
+      const tema = String(el.tema.value || "").trim();
+      estado.temaAtual = tema;
+      estado.gerandoConteudo = true;
+
+      const signal = cancelarGeracaoConteudoAnterior();
+
+      setBotoesDesabilitados(true);
+      setStatus("Gerando novo texto...");
+      atualizarTextoLegenda("Gerando novo texto...");
+
+      try {
+        const resposta = await fetch(
+          `/gerar-conteudo?tema=${encodeURIComponent(tema)}&modo=novo_texto`,
+          {
+            method: "GET",
+            signal,
+            headers: {
+              "Accept": "application/json"
+            }
+          }
+        );
+
+        if (!resposta.ok) {
+          const textoErro = await resposta.text().catch(() => "");
+          throw new Error(textoErro || "Falha ao gerar novo texto.");
+        }
+
+        const data = await resposta.json();
+
+        if (!data || typeof data !== "object") {
+          throw new Error("Resposta inválida ao gerar novo texto.");
+        }
+
+        atualizarTextoLegenda(String(data.texto || ""));
+        atualizarHashtags(data.hashtags || []);
+        atualizarEstadoSlides(data.slides || []);
+        renderSlides();
+
+        setStatus("Novo texto gerado. Criando novas imagens...");
+        estado.gerandoImagens = true;
+
+        for (let i = 0; i < estado.slidesData.length; i++) {
+          await gerarImagemSlide(i);
+          await delay(180);
+        }
+
+        setStatus("Novo texto e imagens concluídos.");
+        await delay(1100);
+        setStatus("", false);
+      } catch (erro) {
+        if (erro?.name === "AbortError") {
+          mostrarErro("A geração anterior foi cancelada para criar um novo texto.");
+        } else {
+          console.error("Erro ao gerar novo texto:", erro);
+          mostrarErro(erro?.message || "Erro ao gerar novo texto.");
+        }
+      } finally {
+        estado.gerandoConteudo = false;
+        estado.gerandoImagens = false;
+        setBotoesDesabilitados(false);
+      }
+    }
+function copiarLegenda() {
+      esconderErro();
+
+      const legenda = String(el.texto.textContent || "").trim();
+      const hashtags = Array.from(el.hashtags.querySelectorAll(".tag"))
+        .map((tag) => String(tag.textContent || "").trim())
+        .filter(Boolean)
+        .join(" ");
+
+      const conteudoFinal = [legenda, hashtags].filter(Boolean).join("\n\n").trim();
+
+      if (!conteudoFinal) {
+        mostrarErro("Não há legenda disponível para copiar.");
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(conteudoFinal)
+          .then(() => {
+            setStatus("Legenda copiada.");
+            setTimeout(() => setStatus("", false), 1200);
+          })
+          .catch(() => {
+            fallbackCopiarTexto(conteudoFinal);
+          });
+
+        return;
+      }
+
+      fallbackCopiarTexto(conteudoFinal);
+    }
+
+    function fallbackCopiarTexto(texto) {
+      try {
+        const area = document.createElement("textarea");
+        area.value = texto;
+        area.setAttribute("readonly", "readonly");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        area.style.pointerEvents = "none";
+        area.style.left = "-9999px";
+
+        document.body.appendChild(area);
+        area.focus();
+        area.select();
+
+        const sucesso = document.execCommand("copy");
+        document.body.removeChild(area);
+
+        if (!sucesso) {
+          throw new Error("Falha no comando de cópia.");
+        }
+
+        setStatus("Legenda copiada.");
+        setTimeout(() => setStatus("", false), 1200);
+      } catch (erro) {
+        console.error("Erro ao copiar legenda:", erro);
+        mostrarErro("Não foi possível copiar a legenda automaticamente.");
+      }
+    }
+
+    function baixar(index) {
+      esconderErro();
+
+      const slide = estado.slidesData[index];
+
+      if (!slide || !slide.imagem) {
+        mostrarErro("Imagem ainda não foi gerada para este slide.");
+        return;
+      }
+
+      try {
+        const link = document.createElement("a");
+        link.href = slide.imagem;
+        link.download = `slide-${index + 1}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (erro) {
+        console.error("Erro ao baixar imagem:", erro);
+        mostrarErro("Não foi possível baixar a imagem deste slide.");
+      }
+    }
+async function baixarTudo() {
+      esconderErro();
+
+      if (!estado.slidesData.length) {
+        mostrarErro("Gere conteúdo primeiro antes de baixar tudo.");
+        return;
+      }
+
+      const imagensDisponiveis = estado.slidesData.filter((slide) => !!slide.imagem);
+
+      if (!imagensDisponiveis.length) {
+        mostrarErro("Nenhuma imagem pronta para download.");
+        return;
+      }
+
+      setStatus("Baixando imagens...");
+
+      try {
+        for (let i = 0; i < estado.slidesData.length; i++) {
+          const slide = estado.slidesData[i];
+          if (!slide.imagem) {
+            continue;
+          }
+
+          const link = document.createElement("a");
+          link.href = slide.imagem;
+          link.download = `slide-${i + 1}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          await delay(650);
+        }
+
+        setStatus("Download concluído.");
+        setTimeout(() => setStatus("", false), 1200);
+      } catch (erro) {
+        console.error("Erro ao baixar todas as imagens:", erro);
+        mostrarErro("Não foi possível baixar todas as imagens.");
+      }
+    }
+
+    function registrarEventos() {
+      el.btnGerar.addEventListener("click", gerar);
+      el.btnOutroTexto.addEventListener("click", novoTexto);
+      el.btnImagens.addEventListener("click", novasImagens);
+      el.btnBaixarTudo.addEventListener("click", baixarTudo);
+      el.btnCopiar.addEventListener("click", copiarLegenda);
+
+      el.tema.addEventListener("keydown", (evento) => {
+        if (evento.key === "Enter" && !evento.shiftKey) {
+          evento.preventDefault();
+          gerar();
+        }
+      });
+    }
+
+    function inicializarApp() {
+      esconderErro();
+      setStatus("", false);
+      renderEstadoVazio();
+      atualizarTextoLegenda("Gere um conteúdo para começar...");
+      atualizarHashtags([]);
+      registrarEventos();
+    }
+window.gerar = gerar;
+    window.novoTexto = novoTexto;
+    window.novasImagens = novasImagens;
+    window.baixarTudo = baixarTudo;
+    window.baixar = baixar;
+    window.regenerarImagemUnica = regenerarImagemUnica;
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        return;
+      }
+
+      // quando o usuário volta para a aba, garante que o layout não fique “preso”
+      try {
+        if (!estado.gerandoConteudo && !estado.gerandoImagens && !estado.slidesData.length) {
+          renderEstadoVazio();
+        }
+      } catch (erro) {
+        console.error("Erro ao restaurar estado da página:", erro);
+      }
+    });
+
+    window.addEventListener("online", () => {
+      setStatus("Conexão restabelecida.");
+      setTimeout(() => setStatus("", false), 1200);
+    });
+
+    window.addEventListener("offline", () => {
+      mostrarErro("Você está offline. Algumas funções podem falhar até a conexão voltar.");
+    });
+
+    window.addEventListener("error", (evento) => {
+      console.error("Erro global capturado:", evento.error || evento.message || evento);
+    });
+
+    window.addEventListener("unhandledrejection", (evento) => {
+      console.error("Promise rejeitada sem tratamento:", evento.reason || evento);
+    });
+
+    inicializarApp();
+  </script>
+</body>
+</html>
+<!--
+  BLOCO DE VERIFICAÇÃO FINAL
+
+  Antes de salvar, confira:
+  1. O arquivo começa com <!DOCTYPE html>
+  2. Existe apenas 1 tag <html>, 1 <head> e 1 <body>
+  3. Todas as 14 partes anteriores foram coladas na ordem correta
+  4. Esta parte 14 não substitui código: ela apenas serve como conferência visual
+  5. A parte 15 contém apenas observações de fechamento e não adiciona nova lógica
+-->
+<!--
+  INDEX.HTML COMPLETO FINALIZADO
+
+  Compatível com:
+  - /gerar-conteudo
+  - /gerar-imagem
+
+  Recursos incluídos:
+  - tema animado com ondas
+  - layout profissional e minimalista
+  - geração robusta de conteúdo
+  - carregamento de imagens slide a slide
+  - outro texto
+  - novas imagens
+  - copiar legenda
+  - baixar imagem individual
+  - baixar todas
+  - tratamento de erro, offline, falhas de renderização e promises rejeitadas
+-->
