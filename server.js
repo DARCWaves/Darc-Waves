@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const axios = require("axios");
 const path = require("path");
@@ -10,7 +12,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 const GEMINI_IMAGE_MODEL =
-  process.env.GEMINI_IMAGE_MODEL || "gemini-2.0-flash-preview-image-generation";
+  process.env.GEMINI_IMAGE_MODEL || "gemini-3.1-flash-image-preview";
 
 const REQUEST_TIMEOUT_MS = 120000;
 const MAX_SLIDES = 6;
@@ -78,6 +80,7 @@ function limitarTexto(texto, tamanhoMaximo = 4000) {
 
   return valor.slice(0, tamanhoMaximo);
 }
+
 function limparJSON(texto) {
   let textoLimpo = safeString(texto, "").trim();
 
@@ -122,7 +125,7 @@ function normalizarSlides(slides) {
       const texto = limitarTexto(slide?.texto || "", 500);
       const promptImagem = limitarTexto(
         slide?.promptImagem || slide?.imagem || `Imagem profissional sobre o slide ${index + 1}`,
-        1200
+        1400
       );
 
       return {
@@ -165,6 +168,7 @@ function criarAxiosConfig(headers = {}, timeout = REQUEST_TIMEOUT_MS) {
     validateStatus: () => true
   };
 }
+
 async function chamarOpenAIChat(prompt) {
   const url = "https://api.openai.com/v1/chat/completions";
 
@@ -288,6 +292,7 @@ Formato obrigatório:
 
   return validarEstruturaConteudo(data);
 }
+
 function extrairTextoGemini(data) {
   const parts = data?.candidates?.[0]?.content?.parts;
 
@@ -346,7 +351,7 @@ async function chamarGeminiImagem(promptFinal) {
       }
     ],
     generationConfig: {
-      responseModalities: ["TEXT", "IMAGE"]
+      responseModalities: ["IMAGE"]
     }
   };
 
@@ -375,6 +380,7 @@ async function chamarGeminiImagem(promptFinal) {
 
   return imagemBase64;
 }
+
 async function gerarImagemGeminiComRetry(promptFinal, tentativas = 3) {
   let ultimoErro = null;
 
@@ -459,6 +465,7 @@ function respostaJsonErro(res, statusCode, mensagem, detalhes = null) {
     detalhes
   });
 }
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -552,6 +559,7 @@ app.get("/gerar-imagem", async (req, res) => {
     );
   }
 });
+
 app.use((req, res, next) => {
   const inicio = Date.now();
 
@@ -600,10 +608,9 @@ function iniciarServidor() {
     process.exit(1);
   }
 }
+
 process.on("uncaughtException", (erro) => {
   logError("uncaughtException capturada:", erro?.stack || erro);
-
-  // decisão estratégica: não derrubar imediatamente
 });
 
 process.on("unhandledRejection", (motivo) => {
