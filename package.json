@@ -1,19 +1,34 @@
 {
   "name": "darc-waves",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "SaaS de geração de conteúdo automatizado com OpenAI e Gemini",
+  "main": "server.js",
   "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo \"Sem etapa de build necessária\"",
+    "postinstall": "echo \"Dependências instaladas com sucesso\""
+  },
+  "keywords": [
+    "saas",
+    "ai",
+    "openai",
+    "gemini",
+    "conteudo",
+    "automacao",
+    "marketing",
+    "gerador"
+  ],
+  "author": "DARC Waves",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "axios": "^1.14.0",
-    "express": "^5.2.1",
-    "lowdb": "^7.0.1"
+    "axios": "^1.7.2",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
   }
 }
