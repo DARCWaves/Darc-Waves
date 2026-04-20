@@ -27,14 +27,26 @@ function validarConfig() {
    UTILITÁRIOS
 ========================= */
 function delay(ms) {
-  return new Promise(res => setTimeout(res, ms));
+  return new Promise((res) => setTimeout(res, ms));
 }
 
 function limparJSON(texto) {
-  return texto
+  if (!texto) return "";
+
+  let t = texto
     .replace(/```json/gi, "")
     .replace(/```/g, "")
     .trim();
+
+  // tenta extrair só o JSON se vier texto misturado
+  const primeiro = t.indexOf("{");
+  const ultimo = t.lastIndexOf("}");
+
+  if (primeiro !== -1 && ultimo !== -1) {
+    t = t.substring(primeiro, ultimo + 1);
+  }
+
+  return t;
 }
 
 async function fetchComRetry(url, options, tentativas = MAX_RETRIES) {
@@ -58,7 +70,6 @@ async function fetchComRetry(url, options, tentativas = MAX_RETRIES) {
       }
 
       return await res.json();
-
     } catch (err) {
       erroFinal = err;
       console.log(`Tentativa ${i + 1} falhou:`, err.message);
@@ -88,7 +99,14 @@ app.get("/gerar-conteudo", async (req, res) => {
     const prompt = `
 Crie um carrossel sobre: "${tema}"
 
-Formato JSON obrigatório:
+RETORNE APENAS JSON VÁLIDO.
+
+PROIBIDO:
+- markdown
+- explicações
+- texto fora do JSON
+
+Formato obrigatório:
 {
   "texto": "",
   "hashtags": ["", "", "", ""],
@@ -102,11 +120,9 @@ Formato JSON obrigatório:
 }
 
 Regras:
-- 6 slides
+- 6 slides obrigatórios
 - slide 1 = capa chamativa
-- slides 2-6 = conteúdo
-- respostas SEM markdown
-- apenas JSON
+- slides 2-6 = conteúdo direto
 `;
 
     const data = await fetchComRetry(
@@ -131,16 +147,23 @@ Regras:
       throw new Error("Resposta vazia da OpenAI");
     }
 
+    const textoLimpo = limparJSON(texto);
+
     let json;
 
     try {
-      json = JSON.parse(limparJSON(texto));
-    } catch {
-      throw new Error("Erro ao converter JSON");
+      json = JSON.parse(textoLimpo);
+    } catch (err) {
+      console.log("========== DEBUG IA ==========");
+      console.log("RESPOSTA ORIGINAL:\n", texto);
+      console.log("RESPOSTA LIMPA:\n", textoLimpo);
+      console.log("================================");
+
+      throw new Error("JSON inválido retornado pela IA");
     }
 
-    if (!json.slides || !Array.isArray(json.slides)) {
-      throw new Error("Slides inválidos");
+    if (!json.slides || !Array.isArray(json.slides) || json.slides.length === 0) {
+      throw new Error("IA não retornou slides válidos");
     }
 
     res.json({
@@ -161,7 +184,7 @@ Regras:
 });
 
 /* =========================
-   GERAR IMAGEM
+   GERAR IMAGEM (OPENAI)
 ========================= */
 app.get("/gerar-imagem", async (req, res) => {
   try {
@@ -184,13 +207,13 @@ app.get("/gerar-imagem", async (req, res) => {
         body: JSON.stringify({
           model: "gpt-image-1",
           prompt: `
-Imagem para Instagram:
+Imagem profissional para Instagram:
 
 ${prompt}
 
 Regras:
-- profissional
 - sem texto
+- sem marca d'água
 - alta qualidade
 - visual moderno
 `,
