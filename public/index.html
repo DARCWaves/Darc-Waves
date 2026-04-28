@@ -988,7 +988,9 @@
           return;
         }
 
-        alert("Conteúdo gerado com sucesso! Agora conectamos isso ao layout principal do SaaS.");
+        
+renderizarResultado(data);
+
 
       } catch (erro) {
         alert("Erro de conexão ao gerar conteúdo.");
@@ -1013,5 +1015,172 @@
       alert("Baixar tudo será conectado aos resultados gerados.");
     });
   </script>
+
+<script>
+function garantirAreaResultados() {
+  if (document.getElementById("resultadoIA")) return;
+
+  const area = document.createElement("section");
+  area.id = "resultadoIA";
+  area.style.cssText = `
+    margin: 40px auto;
+    width: min(1100px, 94%);
+    display: grid;
+    gap: 28px;
+  `;
+
+  area.innerHTML = `
+    <div style="
+      border:1px solid rgba(41,199,255,.35);
+      background:rgba(5,12,32,.86);
+      border-radius:28px;
+      padding:28px;
+      color:white;
+      box-shadow:0 0 28px rgba(41,199,255,.16);
+    ">
+      <h2 style="font-size:32px;margin-bottom:18px;background:linear-gradient(90deg,#29c7ff,#9d4dff,#ff4ff3);-webkit-background-clip:text;color:transparent;">Legenda</h2>
+      <p id="resultadoLegenda" style="font-size:18px;line-height:1.7;color:#d8e0f5;"></p>
+    </div>
+
+    <div style="
+      border:1px solid rgba(157,77,255,.35);
+      background:rgba(5,12,32,.86);
+      border-radius:28px;
+      padding:28px;
+      color:white;
+    ">
+      <h2 style="font-size:32px;margin-bottom:18px;">Hashtags</h2>
+      <div id="resultadoHashtags" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+    </div>
+
+    <div id="resultadoSlides" style="
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:24px;
+    "></div>
+  `;
+
+  document.body.appendChild(area);
+}
+
+async function gerarImagemDoSlide(slide, card) {
+  const imgBox = card.querySelector(".imgBox");
+
+  imgBox.innerHTML = `
+    <div style="
+      width:100%;
+      aspect-ratio:1/1;
+      border-radius:20px;
+      background:linear-gradient(135deg,rgba(41,199,255,.15),rgba(157,77,255,.18),rgba(255,79,243,.12));
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      position:relative;
+    ">
+      <div style="
+        position:absolute;
+        width:160%;
+        height:120px;
+        background:repeating-linear-gradient(90deg,transparent 0 10px,rgba(41,199,255,.7) 10px 13px,transparent 13px 22px,rgba(157,77,255,.7) 22px 25px);
+        animation:ondaImg 1.6s infinite alternate ease-in-out;
+        transform:rotate(-8deg);
+      "></div>
+      <strong style="z-index:1;background:rgba(0,0,0,.45);padding:10px 16px;border-radius:999px;">Gerando imagem...</strong>
+    </div>
+  `;
+
+  try {
+    const resposta = await fetch("/gerar-imagem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: slide.promptImagem || slide.imagem || slide.titulo })
+    });
+
+    const data = await resposta.json();
+
+    if (!data.ok || !data.imagem) {
+      imgBox.innerHTML = `<p style="color:#ff9aa8;">Imagem não gerada.</p>`;
+      return;
+    }
+
+    imgBox.innerHTML = `
+      <img src="${data.imagem}" style="width:100%;border-radius:20px;display:block;" />
+      <a href="${data.imagem}" download="darc-wave-slide.png" style="
+        margin-top:14px;
+        display:block;
+        text-align:center;
+        padding:14px;
+        border-radius:14px;
+        background:linear-gradient(135deg,#774dff,#29c7ff);
+        color:white;
+        text-decoration:none;
+        font-weight:800;
+      ">Baixar imagem</a>
+    `;
+  } catch (e) {
+    imgBox.innerHTML = `<p style="color:#ff9aa8;">Erro ao gerar imagem.</p>`;
+  }
+}
+
+function renderizarResultado(data) {
+  garantirAreaResultados();
+
+  document.getElementById("resultadoLegenda").textContent = data.texto || "Legenda não retornada.";
+
+  const tags = document.getElementById("resultadoHashtags");
+  tags.innerHTML = "";
+
+  (data.hashtags || []).forEach(tag => {
+    const span = document.createElement("span");
+    span.textContent = tag;
+    span.style.cssText = `
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(41,199,255,.12);
+      border:1px solid rgba(41,199,255,.35);
+      color:#dff7ff;
+      font-weight:800;
+    `;
+    tags.appendChild(span);
+  });
+
+  const slidesArea = document.getElementById("resultadoSlides");
+  slidesArea.innerHTML = "";
+
+  (data.slides || []).forEach((slide, index) => {
+    const card = document.createElement("article");
+    card.style.cssText = `
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(5,12,32,.88);
+      border-radius:26px;
+      padding:22px;
+      color:white;
+      box-shadow:0 0 24px rgba(0,0,0,.25);
+    `;
+
+    card.innerHTML = `
+      <small style="color:#8fb8ff;font-weight:800;">SLIDE ${index + 1}</small>
+      <h3 style="font-size:24px;margin:12px 0;color:white;">${slide.titulo || "Sem título"}</h3>
+      <p style="color:#d8e0f5;line-height:1.6;margin-bottom:18px;">${slide.texto || ""}</p>
+      <div class="imgBox"></div>
+    `;
+
+    slidesArea.appendChild(card);
+    gerarImagemDoSlide(slide, card);
+  });
+
+  document.getElementById("resultadoIA").scrollIntoView({ behavior: "smooth" });
+}
+
+const style = document.createElement("style");
+style.textContent = `
+@keyframes ondaImg {
+  from { transform:translateX(-80px) rotate(-8deg) scaleY(.9); }
+  to { transform:translateX(80px) rotate(-5deg) scaleY(1.2); }
+}
+`;
+document.head.appendChild(style);
+</script>
+
 </body>
 </html>
