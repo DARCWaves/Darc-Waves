@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DARC Waves | Conteúdo Inteligente</title>
+
+  <meta name="description" content="DARC Waves é um gerador inteligente de conteúdo para redes sociais, carrosséis, ideias de posts e estratégias criativas com IA." />
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg2: #08142b;
+      --card: rgba(8, 18, 40, 0.78);
+      --card2: rgba(13, 20, 48, 0.92);
+      --text: #ffffff;
+      --muted: #b8c4df;
+      --blue: #29c7ff;
+      --purple: #9d4dff;
+      --pink: #ff4ff3;
+      --green: #12d68b;
+      --gold: #f5b300;
+      --border: rgba(255, 255, 255, 0.14);
+      --shadow-blue: 0 0 28px rgba(41, 199, 255, 0.35);
+      --shadow-purple: 0 0 28px rgba(157, 77, 255, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(41,199,255,.16), transparent 30%),
+        radial-gradient(circle at 82% 25%, rgba(157,77,255,.22), transparent 32%),
+        radial-gradient(circle at 50% 85%, rgba(255,79,243,.12), transparent 28%),
+        linear-gradient(135deg, #030611, #08152e 45%, #10051e);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -3;
+    }
+
+    body::before {
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.75), transparent 85%);
+    }
+
+    body::after {
+      background: linear-gradient(120deg, transparent, rgba(41,199,255,.08), transparent, rgba(157,77,255,.08), transparent);
+      animation: bgShift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgShift {
+      from { transform: translateX(-8%) translateY(-3%); }
+      to { transform: translateX(8%) translateY(3%); }
+    }
+
+    .page {
+      position: relative;
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .wave-field {
+      position: fixed;
+      left: -10%;
+      right: -10%;
+      top: 330px;
+      height: 310px;
+      pointer-events: none;
+      z-index: -2;
+      opacity: .85;
+      overflow: hidden;
+    }
+
+    .wave-line {
+      position: absolute;
+      width: 130%;
+      height: 160px;
+      left: -12%;
+      border-radius: 50%;
+      filter: blur(.2px);
+      border-top: 2px solid rgba(41,199,255,.45);
+      box-shadow: 0 -12px 28px rgba(41,199,255,.22);
+      animation: waveMove 8s ease-in-out infinite alternate;
+    }
+
+    .wave-line:nth-child(1) {
+      top: 34px;
+      transform: rotate(-5deg);
+    }
+
+    .wave-line:nth-child(2) {
+      top: 76px;
+      border-top-color: rgba(157,77,255,.5);
+      box-shadow: 0 -12px 28px rgba(157,77,255,.25);
+      animation-delay: -2s;
+      transform: rotate(-3deg);
+    }
+
+    .wave-line:nth-child(3) {
+      top: 118px;
+      border-top-color: rgba(255,79,243,.4);
+      box-shadow: 0 -12px 28px rgba(255,79,243,.2);
+      animation-delay: -4s;
+      transform: rotate(-2deg);
+    }
+
+    @keyframes waveMove {
+      from { transform: translateX(-40px) rotate(-5deg) scaleY(1); }
+      to { transform: translateX(40px) rotate(-2deg) scaleY(1.18); }
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 74px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: .4px;
+      font-size: clamp(20px, 4vw, 28px);
+      background: linear-gradient(90deg, #62e7ff, #b06dff, #ff66f7);
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: titleWave 3.5s ease-in-out infinite;
+    }
+
+    @keyframes titleWave {
+      0%,100% { transform: translateY(0); filter: drop-shadow(0 0 6px rgba(41,199,255,.25)); }
+      50% { transform: translateY(-4px); filter: drop-shadow(0 0 15px rgba(157,77,255,.5)); }
+    }
+
+    .logo-wave {
+      width: 42px;
+      height: 24px;
+      position: relative;
+    }
+
+    .logo-wave span {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
+      clip-path: polygon(0 50%, 12% 38%, 24% 60%, 36% 30%, 52% 58%, 68% 42%, 82% 54%, 100% 44%, 100% 60%, 82% 70%, 68% 56%, 52% 74%, 36% 48%, 24% 76%, 12% 52%, 0 64%);
+      filter: drop-shadow(0 0 10px rgba(41,199,255,.9));
+      animation: logoPulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%,100% { transform: scaleX(1); opacity: .8; }
+      50% { transform: scaleX(1.12); opacity: 1; }
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border: 1px solid rgba(255, 79, 243, .55);
+      background: rgba(40, 15, 68, .55);
+      color: #f4c4ff;
+      border-radius: 14px;
+      font-weight: 800;
+      box-shadow: var(--shadow-purple);
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--pink);
+      box-shadow: 0 0 16px var(--pink);
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: .35; transform: scale(.85); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 34px;
+      align-items: center;
+      margin-bottom: 62px;
+    }
+
+    .hero h1 {
+      font-size: clamp(44px, 10vw, 82px);
+      line-height: .95;
+      font-weight: 950;
+      letter-spacing: -3px;
+      background: linear-gradient(90deg, #fff, #60e4ff 45%, #a86dff 75%, #ff70f8);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 22px;
+      text-shadow: 0 0 22px rgba(41,199,255,.15);
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: clamp(17px, 3vw, 24px);
+      line-height: 1.62;
+      margin-bottom: 20px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: .2px;
+      padding: 17px 26px;
+      border-radius: 16px;
+      font-size: 16px;
+      transition: .25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 56px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #197cff, #8b4dff, #d84dff);
+      box-shadow: 0 0 26px rgba(100, 77, 255, .45);
+    }
+
+    .btn-secondary {
+      border: 1px solid rgba(120, 160, 255, .35);
+      background: rgba(10, 20, 48, .55);
+      color: #c9d8ff;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.08);
+    }
+
+    .visual-card {
+      min-height: 315px;
+      border: 2px solid rgba(41,199,255,.75);
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(41,199,255,.22), transparent 32%),
+        linear-gradient(145deg, rgba(5, 11, 28, .85), rgba(20, 8, 42, .88));
+      box-shadow:
+        0 0 30px rgba(41,199,255,.45),
+        inset 0 0 30px rgba(157,77,255,.15);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visual-card::before {
+      content: "";
+      position: absolute;
+      width: 170%;
+      height: 120px;
+      background:
+        repeating-linear-gradient(90deg,
+          rgba(41,199,255,.0) 0 8px,
+          rgba(41,199,255,.35) 8px 10px,
+          rgba(157,77,255,.35) 10px 12px,
+          rgba(255,79,243,.0) 12px 22px);
+      filter: blur(1px);
+      transform: rotate(-8deg);
+      animation: neonWave 4s ease-in-out infinite alternate;
+      opacity: .85;
+    }
+
+    @keyframes neonWave {
+      from { translate: -70px 0; scale: 1 1; }
+      to { translate: 70px 18px; scale: 1.04 1.18; }
+    }
+
+    .visual-icons {
+      position: absolute;
+      bottom: 36px;
+      display: flex;
+      gap: 32px;
+      color: #f067ff;
+      font-size: 28px;
+      text-shadow: 0 0 16px rgba(255,79,243,.7);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin: 28px 0 32px;
+      text-align: center;
+    }
+
+    .section-title::before,
+    .section-title::after {
+      content: "";
+      width: min(160px, 22vw);
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--purple), transparent);
+    }
+
+    .section-title h2 {
+      font-size: clamp(28px, 6vw, 42px);
+      background: linear-gradient(90deg, var(--blue), #fff, var(--purple));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .generator {
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(4, 9, 25, .74);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 0 30px rgba(0,0,0,.35);
+      margin-bottom: 42px;
+    }
+
+    .generator-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .input-card,
+    .upload-card {
+      border: 1px solid rgba(41,199,255,.24);
+      background: rgba(13, 22, 52, .78);
+      border-radius: 22px;
+      padding: 20px;
+    }
+
+    .input-card h3,
+    .upload-card h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .input-card p,
+    .upload-card p {
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 138px;
+      resize: vertical;
+      border: 1px solid rgba(255,255,255,.14);
+      outline: none;
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      padding: 18px;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    textarea:focus {
+      border-color: rgba(41,199,255,.8);
+      box-shadow: var(--shadow-blue);
+    }
+
+    .upload-zone {
+      min-height: 220px;
+      border: 1.5px dashed rgba(157,77,255,.75);
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(157,77,255,.18), transparent 30%),
+        rgba(255,255,255,.04);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-zone input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-preview {
+      max-width: 100%;
+      max-height: 190px;
+      border-radius: 16px;
+      display: none;
+      box-shadow: 0 0 18px rgba(41,199,255,.35);
+    }
+
+    .upload-empty {
+      color: var(--muted);
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+
+    .upload-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      border: 1px solid rgba(41,199,255,.45);
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 28px;
+      box-shadow: var(--shadow-blue);
+    }
+
+    .generator-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .btn-generate { background: linear-gradient(135deg, #774dff, #b95cff); }
+    .btn-blue { background: linear-gradient(135deg, #1478ff, #25c4ff); }
+    .btn-green { background: linear-gradient(135deg, #00a86b, #19d890); }
+    .btn-gold { background: linear-gradient(135deg, #bd8200, #efc43f); color: #1e1500; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 26px;
+      margin-bottom: 38px;
+    }
+
+    .info-card {
+      border: 1px solid rgba(41,199,255,.45);
+      background: linear-gradient(145deg, rgba(8, 18, 40, .82), rgba(9, 9, 26, .9));
+      border-radius: 24px;
+      padding: 28px;
+      min-height: 260px;
+      box-shadow: inset 0 0 26px rgba(41,199,255,.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card:nth-child(2) {
+      border-color: rgba(255,79,243,.45);
+    }
+
+    .info-card h3 {
+      font-size: 27px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .info-card p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 18px;
+      font-size: 17px;
+    }
+
+    .info-card ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .info-card a {
+      color: #eaf6ff;
+      text-decoration: none;
+      font-weight: 800;
+      transition: .2s;
+    }
+
+    .info-card a:hover {
+      color: var(--blue);
+    }
+
+    .arrow {
+      position: absolute;
+      right: 28px;
+      bottom: 28px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 1px solid currentColor;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      box-shadow: var(--shadow-blue);
+    }
+
+    .info-card:nth-child(2) .arrow {
+      color: var(--pink);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .cta-strip {
+      margin: 0 auto 38px;
+      max-width: 760px;
+      border: 1px solid rgba(157,77,255,.46);
+      border-radius: 20px;
+      background: linear-gradient(90deg, rgba(41,199,255,.13), rgba(157,77,255,.16), rgba(255,79,243,.11));
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      box-shadow: var(--shadow-purple);
+    }
+
+    .cta-strip h3 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .cta-strip p {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .audio-wave {
+      width: 146px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .audio-wave span {
+      width: 5px;
+      border-radius: 99px;
+      background: linear-gradient(to top, var(--blue), var(--purple), var(--pink));
+      animation: bar 1.2s ease-in-out infinite;
+      box-shadow: 0 0 12px rgba(255,79,243,.55);
+    }
+
+    .audio-wave span:nth-child(1) { height: 18px; animation-delay: -.1s; }
+    .audio-wave span:nth-child(2) { height: 32px; animation-delay: -.2s; }
+    .audio-wave span:nth-child(3) { height: 22px; animation-delay: -.3s; }
+    .audio-wave span:nth-child(4) { height: 42px; animation-delay: -.4s; }
+    .audio-wave span:nth-child(5) { height: 28px; animation-delay: -.5s; }
+    .audio-wave span:nth-child(6) { height: 38px; animation-delay: -.6s; }
+    .audio-wave span:nth-child(7) { height: 20px; animation-delay: -.7s; }
+    .audio-wave span:nth-child(8) { height: 34px; animation-delay: -.8s; }
+
+    @keyframes bar {
+      0%,100% { transform: scaleY(.55); opacity: .65; }
+      50% { transform: scaleY(1.2); opacity: 1; }
+    }
+
+    .loading-footer {
+      border-top: 1px solid rgba(255,255,255,.10);
+      padding-top: 28px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 30px;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .loader-ring {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 5px dashed var(--blue);
+      animation: spin 1.2s linear infinite;
+      box-shadow: var(--shadow-blue);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .loading-left h3 {
+      color: #c8eaff;
+      margin-bottom: 6px;
+    }
+
+    .long-wave {
+      height: 66px;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      background: rgba(255,255,255,.03);
+    }
+
+    .long-wave::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg,
+          transparent 0 10px,
+          rgba(41,199,255,.7) 10px 13px,
+          transparent 13px 22px,
+          rgba(157,77,255,.7) 22px 25px,
+          transparent 25px 38px,
+          rgba(255,79,243,.65) 38px 41px,
+          transparent 41px 55px);
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 78%);
+      animation: soundMove 2.4s linear infinite;
+    }
+
+    @keyframes soundMove {
+      from { transform: translateX(-120px) scaleY(.85); }
+      to { transform: translateX(120px) scaleY(1.15); }
+    }
+
+    .image-loading-card {
+      position: relative;
+      min-height: 260px;
+      border-radius: 22px;
+      border: 1px solid rgba(41,199,255,.26);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(41,199,255,.16), transparent 30%),
+        linear-gradient(145deg, rgba(4, 13, 32, .95), rgba(17, 9, 42, .95));
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      margin-top: 22px;
+    }
+
+    .image-loading-card::before {
+      content: "";
+      position: absolute;
+      width: 150%;
+      height: 120px;
+      background:
+        repeating-linear-gradient(90deg,
+          transparent 0 8px,
+          rgba(41,199,255,.65) 8px 10px,
+          transparent 10px 18px,
+          rgba(157,77,255,.65) 18px 20px,
+          transparent 20px 30px);
+      transform: rotate(-8deg);
+      filter: blur(.5px);
+      animation: imageWave 2.2s ease-in-out infinite alternate;
+    }
+
+    .image-loading-card strong {
+      position: relative;
+      z-index: 1;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(5, 10, 25, .75);
+      border: 1px solid rgba(255,255,255,.13);
+      color: #dcecff;
+      box-shadow: var(--shadow-blue);
+    }
+
+    @keyframes imageWave {
+      from { transform: translateX(-80px) rotate(-8deg) scaleY(.95); }
+      to { transform: translateX(80px) rotate(-5deg) scaleY(1.18); }
+    }
+
+    footer {
+      color: var(--muted);
+      text-align: center;
+      padding: 44px 0 10px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        align-items: flex-start;
+        margin-bottom: 44px;
+      }
+
+      .status-pill {
+        font-size: 13px;
+        padding: 11px 13px;
+      }
+
+      .hero,
+      .generator-grid,
+      .cards,
+      .loading-footer {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        gap: 26px;
+      }
+
+      .visual-card {
+        min-height: 245px;
+      }
+
+      .generator-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-strip {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        padding-inline: 14px;
+      }
+
+      header {
+        flex-direction: column;
+      }
+
+      .hero h1 {
+        letter-spacing: -1px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .info-card,
+      .generator,
+      .input-card,
+      .upload-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wave-field" aria-hidden="true">
+    <div class="wave-line"></div>
+    <div class="wave-line"></div>
+    <div class="wave-line"></div>
+  </div>
+
+  <main class="page">
+    <header>
+      <div class="brand">
+        <div class="logo-wave"><span></span></div>
+        DARC Waves
+      </div>
+
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        Carregando ideias...
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>DARC Waves</h1>
+        <p>Gerador de conteúdo inteligente para redes sociais.</p>
+        <p>Crie posts virais, estratégias, carrosséis e imagens que conectam, engajam e transformam seguidores em clientes.</p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#gerador">✦ Gerar Ideias</a>
+          <a class="btn btn-secondary" href="#artigos">Explorar Artigos</a>
+        </div>
+      </div>
+
+      <div class="visual-card">
+        <div class="visual-icons">
+          <span>⚡</span>
+          <span>📈</span>
+          <span>◎</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="gerador" class="generator">
+      <div class="section-title">
+        <h2>Crie seu conteúdo</h2>
+      </div>
+
+      <div class="generator-grid">
+        <div class="input-card">
+          <h3>Prompt escrito</h3>
+          <p>Descreva o conteúdo que você quer gerar. Quanto mais específico, melhor será o resultado.</p>
+
+          <textarea id="promptInput" placeholder="Exemplo: Gere um post sobre uma pizza de calabresa para divulgar em uma pizzaria local, com tom persuasivo e visual premium."></textarea>
+
+          <div class="image-loading-card" id="contentLoading" style="display:none;">
+            <strong>Ondas processando seu conteúdo...</strong>
+          </div>
+        </div>
+
+        <div class="upload-card">
+          <h3>Imagem da galeria</h3>
+          <p>Envie uma imagem para usar como referência visual ou inspiração para o conteúdo.</p>
+
+          <label class="upload-zone">
+            <input id="imageUpload" type="file" accept="image/*" />
+            <img id="uploadPreview" class="upload-preview" alt="Prévia da imagem enviada" />
+            <div id="uploadEmpty" class="upload-empty">
+              <div class="upload-icon">＋</div>
+              <strong>Toque para subir imagem</strong>
+              <span>PNG, JPG ou WEBP</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="generator-actions">
+        <button class="btn btn-generate" id="btnGerar">Gerar</button>
+        <button class="btn btn-blue" id="btnOutroTexto">Outro texto</button>
+        <button class="btn btn-green" id="btnOutrasImagens">Outras imagens</button>
+        <button class="btn btn-gold" id="btnBaixar">Baixar tudo</button>
+      </div>
+    </section>
+
+    <section class="section-title" id="artigos">
+      <h2>Explore conteúdos</h2>
+    </section>
+
+    <section class="cards">
+      <article class="info-card">
+        <h3>📄 Artigos</h3>
+        <p>Ideias, estratégias e guias práticos para crescer nas redes sociais.</p>
+        <ul>
+          <li><a href="./artigos/ideias-de-posts.html">• Ideias de posts virais</a></li>
+          <li><a href="./artigos/marketing-digital.html">• Marketing digital</a></li>
+          <li><a href="./artigos/como-criar-carrossel.html">• Como criar carrossel</a></li>
+        </ul>
+        <div class="arrow">→</div>
+      </article>
+
+      <article class="info-card">
+        <h3>🛡️ Legal</h3>
+        <p>Transparência e segurança para você navegar com tranquilidade.</p>
+        <ul>
+          <li><a href="./politica-privacidade.html">• Política de Privacidade</a></li>
+          <li><a href="./termos.html">• Termos de Uso</a></li>
+        </ul>
+        <div class="arrow">→</div>
+      </article>
+    </section>
+
+    <section class="cta-strip">
+      <div>
+        <h3>Vamos criar algo incrível?</h3>
+        <p>Clique em “Gerar Ideias” e deixe a IA trabalhar por você.</p>
+      </div>
+
+      <div class="audio-wave" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </section>
+
+    <section class="loading-footer">
+      <div class="loading-left">
+        <div class="loader-ring"></div>
+        <div>
+          <h3>Gerando criatividade...</h3>
+          <p>Suas ideias estão tomando forma.</p>
+        </div>
+      </div>
+
+      <div class="long-wave"></div>
+    </section>
+
+    <footer>
+      <p>DARC Waves — conteúdo inteligente, visual futurista e estratégia para redes sociais.</p>
+      <p>© 2026 DARC Waves. Todos os direitos reservados.</p>
+    </footer>
+  </main>
+
+  <script>
+    const promptInput = document.getElementById("promptInput");
+    const imageUpload = document.getElementById("imageUpload");
+    const uploadPreview = document.getElementById("uploadPreview");
+    const uploadEmpty = document.getElementById("uploadEmpty");
+    const contentLoading = document.getElementById("contentLoading");
+
+    const btnGerar = document.getElementById("btnGerar");
+    const btnOutroTexto = document.getElementById("btnOutroTexto");
+    const btnOutrasImagens = document.getElementById("btnOutrasImagens");
+    const btnBaixar = document.getElementById("btnBaixar");
+
+    let imagemReferencia = null;
+
+    imageUpload.addEventListener("change", function () {
+      const file = this.files && this.files[0];
+
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        imagemReferencia = event.target.result;
+        uploadPreview.src = imagemReferencia;
+        uploadPreview.style.display = "block";
+        uploadEmpty.style.display = "none";
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    function setLoading(ativo, texto = "Ondas processando seu conteúdo...") {
+      contentLoading.style.display = ativo ? "grid" : "none";
+      const strong = contentLoading.querySelector("strong");
+      if (strong) strong.textContent = texto;
+
+      btnGerar.disabled = ativo;
+      btnOutroTexto.disabled = ativo;
+      btnOutrasImagens.disabled = ativo;
+
+      btnGerar.style.opacity = ativo ? ".6" : "1";
+      btnOutroTexto.style.opacity = ativo ? ".6" : "1";
+      btnOutrasImagens.style.opacity = ativo ? ".6" : "1";
+    }
+
+    async function gerarConteudo() {
+      const prompt = promptInput.value.trim();
+
+      if (!prompt && !imagemReferencia) {
+        alert("Escreva um prompt ou envie uma imagem da galeria.");
+        return;
+      }
+
+      setLoading(true, "Gerando ideias com ondas inteligentes...");
+
+      try {
+        const temaFinal = prompt || "Criar conteúdo baseado na imagem enviada";
+
+        const resposta = await fetch("/gerar-conteudo", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            tema: temaFinal,
+            imagemReferencia
+          })
+        });
+
+        const data = await resposta.json();
+
+        if (!data.ok) {
+          alert(data.detalhes || data.erro || "Erro ao gerar conteúdo.");
+          return;
+        }
+
+        alert("Conteúdo gerado com sucesso! Agora conectamos isso ao layout principal do SaaS.");
+
+      } catch (erro) {
+        alert("Erro de conexão ao gerar conteúdo.");
+        console.error(erro);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    btnGerar.addEventListener("click", gerarConteudo);
+
+    btnOutroTexto.addEventListener("click", function () {
+      promptInput.value = "";
+      promptInput.focus();
+    });
+
+    btnOutrasImagens.addEventListener("click", function () {
+      alert("Modo de novas imagens será conectado ao gerador principal.");
+    });
+
+    btnBaixar.addEventListener("click", function () {
+      alert("Baixar tudo será conectado aos resultados gerados.");
+    });
+  </script>
+</body>
+</html>
